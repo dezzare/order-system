@@ -1,19 +1,46 @@
 version: '3.9'
 
+networks:
+  my_network:
+    driver: bridge
+  
+
 services:
-  mongo_db:
+  mongo:
     image: mongo:latest
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: admin
-      MONGO_INITDB_USERNAME: order
-      MONGO_INITDB_PASSWORD: order
-      MONGO_INITDB_DATABASE: my_db
+      - MONGO_INITDB_DATABASE=admin
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password 
     ports:
       - 2717:27017
     volumes:
       - mongo_db:/data/db
+      - mongo_config:/data/configdb
+      - ./initDB.js:/docker-entrypoint-initdb.d/initDB.js:ro
+    networks:
+      - my_network
+
+  mongo-express:
+    image: mongo-express
+    container_name: mongo-express
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=admin
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin
+    volumes:
+      - mongo_db:/data/db
+    depends_on:
+      - mongo
+    networks:
+      - my_network
+    ports:
+      - 8081:8081
+    restart: always
 
   node_app:
     build: .
@@ -22,15 +49,14 @@ services:
     volumes:
       - .:/home/app
     environment:
-      PORT: 3000
-      MONGO_URI: mongodb://mongo_db:27017
-      DB_NAME: my_db
-      DB_USERNAME: order
-      DB_PASSWORD: order
+      - PORT=3000
+      - MONGO_URI=mongodb://admin:admin@mongo:27017/admin
     depends_on:
-      - mongo_db
+      - mongo
+    networks:
+      - my_network
 
 volumes:
   mongo_db: {}
-
+  mongo_config: {}
 
