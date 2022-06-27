@@ -1,5 +1,7 @@
 #Restaurant Ordering System
 
+*This project is a work in progress.*
+
 Project to improve some skills:
   - Docker
   - MongoDB
@@ -14,6 +16,6 @@ ________________________________
   - install Docker
   - clone this repo
   - run 'docker compose up --build'
-  - open 'localhost:3000' for access the GUI app
+  - (TODO)open 'localhost:3000' for access the GUI app
   - open 'localhost:8081' for access mongo-express
 
