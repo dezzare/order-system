@@ -13,15 +13,6 @@ router.post('/food', CreateFood);
 // router.post('/customer', CreateCustomer)
 // router.delete('/customer/:id', DeleteCustomerById)
 
-// MOVE TO FOOD
-// router.get('/food/:id', GetFoodById);
-router.get('/foods', GetAllFoods);
-
-
-// router.get('/tables', GetAllTables);
-// router.get('/table/:id', GetOrdersFromTableId);
-// router.get('/status/open', GetAllOpenOrders);
-
 // router.delete('/order/:id')
 
 export { router as AdminRoute };

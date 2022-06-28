@@ -13,7 +13,7 @@ const startServer = async () => {
   await App(app);
 
   app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Servidor rodando no endereço: http://localhost:${PORT}`);
   })
 
 }

@@ -30,15 +30,15 @@ export const CreateFood = async (req: Request, res: Response, next: NextFunction
 
 // }
 
-export const GetAllFoods = async (req: Request, res: Response, next: NextFunction) => {
-  const foods = await Food.find();
+// export const GetAllFoods = async (req: Request, res: Response, next: NextFunction) => {
+//   const foods = await Food.find();
 
-  if (foods !== null) {
-    return res.json(foods)
-  }
+//   if (foods !== null) {
+//     return res.json(foods)
+//   }
 
-  return res.json({ "message": "Nenhum prato cadastrado" })
-}
+//   return res.json({ "message": "Nenhum prato cadastrado" })
+// }
 
 // export const DeleteFoodById = async (req: Request, res: Response, next: NextFunction) => {
 //   const foodId = req.params._id;
