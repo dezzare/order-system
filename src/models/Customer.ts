@@ -2,15 +2,13 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 import { OrderDoc } from './Order';
 
 interface CustomerDoc extends Document {
-  table: number;
+  id: string;
   cart: [any];
   orders: [OrderDoc];
-  pinCode: number;
-
 }
 
 const CustomerSchema = new Schema({
-  table: { type: Number, required: true },
+  id: { type: String, required: true }
   cart: [{
     food: { type: Schema.Types.ObjectId, ref: 'food' },
     unit: { type: Number }
@@ -19,7 +17,6 @@ const CustomerSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'order'
   }],
-  pinCode: { type: Number, required: true }
 
 
 }, { timestamps: true });
