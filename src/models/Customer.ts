@@ -1,10 +1,10 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
-
+import { OrderDoc } from './Order';
 
 interface CustomerDoc extends Document {
   table: number;
   cart: [any];
-  orders: [Schema.Types.ObjectId];
+  orders: [OrderDoc];
   pinCode: number;
 
 }
