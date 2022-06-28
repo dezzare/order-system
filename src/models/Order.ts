@@ -7,6 +7,8 @@ export interface OrderDoc extends Document {
   totalAmount: number;
   orderDate: Date;
   orderStatus: string;
+  customerId: string;
+  customerTable: number;
 }
 
 const OrderSchema = new Schema({
@@ -17,7 +19,9 @@ const OrderSchema = new Schema({
   }],
   totalAmount: { type: Number, require: true },
   orderDate: { type: Date },
-  orderStatus: { type: String }
+  orderStatus: { type: String },
+  customerId: { type: String, required: true },
+  customerTable: { type: Number }
 }, { timestamps: true });
 
 const Order = mongoose.model<OrderDoc>('order', OrderSchema);

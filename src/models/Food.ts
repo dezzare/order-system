@@ -14,7 +14,7 @@ const FoodSchema = new Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   category: { type: String },
-  price: { type: Number },
+  price: { type: Number, required: true },
   images: { type: [String] }
 }, { timestamps: true })
 
