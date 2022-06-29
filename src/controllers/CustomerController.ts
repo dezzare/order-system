@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { Customer, Product, Order, OrderDoc } from '../models';
+import { Customer, Product, Order } from '../models';
 
 
-export const GetCustomerProfile = async (req: Request, res: Response) => {
+export const getCustomerProfile = async (req: Request, res: Response) => {
   const customer = req.body;
 
   if (customer) {
@@ -14,12 +14,12 @@ export const GetCustomerProfile = async (req: Request, res: Response) => {
   return res.status(400).json({ message: 'Erro ao buscar pelo Id' });
 }
 
-export const AddToCart = async (req: Request, res: Response) => {
+export const addToCart = async (req: Request, res: Response) => {
   const customer = req.body;
 
   if (customer) {
     const profile = await Customer.findById(customer._id);
-    let cartItems = Array();
+    let cartItems: any = [];
 
     const { _id, unit } = req.body;
     const product = await Product.findById(_id);
@@ -28,7 +28,7 @@ export const AddToCart = async (req: Request, res: Response) => {
       if (profile != null) {
         cartItems = profile.cart;
         if (cartItems.length > 0) {
-          let existProductItems = cartItems.filter((item) => item.product._id.toString() === _id);
+          let existProductItems = cartItems.filter((item: any) => item.product._id.toString() === _id);
           if (existProductItems.length > 0) {
             const index = cartItems.indexOf(existProductItems[0]);
             if (unit > 0) {
@@ -58,7 +58,7 @@ export const AddToCart = async (req: Request, res: Response) => {
   return res.status(404).json({ msg: 'Unable to add to cart!' });
 }
 
-export const GetCart = async (req: Request, res: Response) => {
+export const getCart = async (req: Request, res: Response) => {
   const customer = req.body;
 
   if (customer) {
@@ -70,7 +70,7 @@ export const GetCart = async (req: Request, res: Response) => {
   return res.status(400).json({ message: 'Cart is Empty!' })
 }
 
-export const DeleteCart = async (req: Request, res: Response) => {
+export const deleteCart = async (req: Request, res: Response) => {
   const customer = req.body;
 
   if (customer) {
@@ -85,19 +85,19 @@ export const DeleteCart = async (req: Request, res: Response) => {
 }
 
 
-export const AddCartToOrders = async (req: Request, res: Response) => {
+export const addCartToOrders = async (req: Request, res: Response) => {
   const customer = req.body;
 
   if (customer) {
     const profile = await Customer.findById(customer._id);
     const orderId = `${Math.floor(Math.random() * 89999) + 1000}`;
     const cart = req.body.cart;
-    let cartItems = Array();
+    let cartItems: any = [];
     let netAmount = 0.0;
-    const products = await Product.find().where('_id').in(cart.map(item => item._id)).exec();
+    const products = await Product.find().where('_id').in(cart.map((item: any) => item._id)).exec();
 
     products.map(product => {
-      cart.map(({ _id, unit }) => {
+      cart.map((_id: any, unit: number) => {
         if (product._id == _id) {
           netAmount += (product.price * unit);
           cartItems.push({ product, unit })
@@ -110,50 +110,22 @@ export const AddCartToOrders = async (req: Request, res: Response) => {
         orderId: orderId,
         items: cartItems,
         totalAmount: netAmount,
-        orderDate: new Date(),
         customerId: profile
       })
 
-      if (profile === null) {
-        return res.status(400).json({ message: 'Carrinho está vazio' })
+      if (profile != null) {
+        profile.orders?.push(currentOrder);
+        profile.cart = [] as any;
+
+        await currentOrder.save();
+
+        const profileResponse = await profile.save();
+
+        return res.status(200).json(profileResponse);
       }
-
-      profile.cart = [] as any;
-      profile.orders.push(currentOrder as OrderDoc);
-
-      await currentOrder.save();
-
-      const profileResponse = await profile.save();
-
-      return res.status(200).json(profileResponse);
-
     }
 
   }
 
   return res.status(400).json({ msg: 'Error while Creating Order' });
 }
-// }
-
-
-// export const GetOrders = async (req: Request, res: Response) => {
-//   const customer = req.user;
-//   if (customer) {
-//     const profile = await Customer.findById(customer._id).populate("orders");
-//     if (profile) {
-//       return res.status(200).json(profile.orders);
-//     }
-//   }
-//   return res.status(400).json({ messsage: 'Nenhum pedido encontrado' });
-// }
-
-// export const GetOrderById = async (req: Request, res: Response) => {
-//   const orderId = req.params.id;
-//   if (orderId) {
-//     const order = await Customer.findById(orderId).populate("items.food");
-//     if (order) {
-//       return res.status(200).json(order);
-//     }
-//   }
-//   return res.status(400).json({ messsage: 'Pedido não encontrado' });
-// }

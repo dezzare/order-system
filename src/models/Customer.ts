@@ -1,27 +1,21 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
-import { OrderDoc } from './Order';
-
-interface CustomerDoc extends Document {
-  id: string;
-  cart: [any];
-  orders: [OrderDoc];
-}
+import mongoose, { Schema } from 'mongoose';
 
 const CustomerSchema = new Schema({
   id: { type: String, required: true },
   cart: [{
-    food: { type: Schema.Types.ObjectId, ref: 'food' },
+    product: { type: Schema.Types.ObjectId, ref: 'product' },
     unit: { type: Number }
   }],
   orders: [{
     type: Schema.Types.ObjectId,
-    ref: 'order'
-  }],
+    ref: 'order',
+    required: true
+  },],
 
 
-}, { timestamps: true });
+}, { timestamps: true })
 
-const Customer = mongoose.model<CustomerDoc>('customer', CustomerSchema);
+const Customer = mongoose.model('customer', CustomerSchema);
 
 export { Customer }
 

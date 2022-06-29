@@ -16,6 +16,10 @@ export const getOrderById = async (req: Request, res: Response) => {
 
 }
 
+export const createOrder = async (req: Request, res: Response) => {
+  console.log('placeholde')
+}
+
 // TODO
 // export const UpdateOrderStatus = async (req: Request, res: Response) => { }
 // export const GetAllOpenOrders = async (req: Request, res: Response) => { }

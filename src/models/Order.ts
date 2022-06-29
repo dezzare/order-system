@@ -1,29 +1,15 @@
-import mongoose, { Schema, Document, Model } from 'mongoose';
-
-
-export interface OrderDoc extends Document {
-  orderId: string;
-  items: [any];
-  totalAmount: number;
-  orderDate: Date;
-  customerId: string;
-  // orderStatus: string;
-  // customerTable: number;
-}
+import mongoose, { Schema } from 'mongoose';
 
 const OrderSchema = new Schema({
   orderId: { type: String, require: true },
   items: [{
-    food: { type: Schema.Types.ObjectId, ref: "food", require: true },
-    unit: { type: Number, require: true }
+    food: { type: Schema.Types.ObjectId, ref: "product" },
+    unit: { type: Number }
   }],
-  totalAmount: { type: Number, require: true },
-  orderDate: { type: Date },
-  orderStatus: { type: String },
-  customerId: { type: String, required: true },
-  customerTable: { type: Number }
+  totalAmount: { type: Number },
+  customerId: { type: String },
 }, { timestamps: true });
 
-const Order = mongoose.model<OrderDoc>('order', OrderSchema);
+const Order = mongoose.model('order', OrderSchema);
 
 export { Order }
