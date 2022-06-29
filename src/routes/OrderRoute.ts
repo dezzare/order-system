@@ -3,8 +3,8 @@ import { getOrders, getOrderById } from '../controllers'
 
 const router = express.Router();
 
-router.get('/orders', getOrders);
-router.get('/order/:id', getOrderById);
+router.get('/', getOrders);
+router.get('/search/:id', getOrderById);
 
 // TODO
 // router.put('/status/update', UpdateOrderStatus);

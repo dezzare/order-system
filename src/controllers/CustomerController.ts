@@ -1,18 +1,18 @@
 import { Request, Response } from 'express';
-import { Customer, Product, Order } from '../models';
+import { Customer, Product } from '../models';
 
 
-export const getCustomerProfile = async (req: Request, res: Response) => {
-  const customer = req.body;
+// export const getCustomerProfile = async (req: Request, res: Response) => {
+//   const customer = req.body;
 
-  if (customer) {
-    const profile = await Customer.findById(customer._id);
-    if (profile) {
-      return res.status(201).json(profile);
-    }
-  }
-  return res.status(400).json({ message: 'Erro ao buscar pelo Id' });
-}
+//   if (customer) {
+//     const profile = await Customer.findById(customer._id);
+//     if (profile) {
+//       return res.status(201).json(profile);
+//     }
+//   }
+//   return res.status(400).json({ message: 'Erro ao buscar pelo Id' });
+// }
 
 export const addToCart = async (req: Request, res: Response) => {
   const customer = req.body;
@@ -85,47 +85,6 @@ export const deleteCart = async (req: Request, res: Response) => {
 }
 
 
-export const addCartToOrders = async (req: Request, res: Response) => {
-  const customer = req.body;
 
-  if (customer) {
-    const profile = await Customer.findById(customer._id);
-    const orderId = `${Math.floor(Math.random() * 89999) + 1000}`;
-    const cart = req.body.cart;
-    let cartItems: any = [];
-    let netAmount = 0.0;
-    const products = await Product.find().where('_id').in(cart.map((item: any) => item._id)).exec();
 
-    products.map(product => {
-      cart.map((_id: any, unit: number) => {
-        if (product._id == _id) {
-          netAmount += (product.price * unit);
-          cartItems.push({ product, unit })
-        }
-      })
-    })
 
-    if (cartItems) {
-      const currentOrder = await Order.create({
-        orderId: orderId,
-        items: cartItems,
-        totalAmount: netAmount,
-        customerId: profile
-      })
-
-      if (profile != null) {
-        profile.orders?.push(currentOrder);
-        profile.cart = [] as any;
-
-        await currentOrder.save();
-
-        const profileResponse = await profile.save();
-
-        return res.status(200).json(profileResponse);
-      }
-    }
-
-  }
-
-  return res.status(400).json({ msg: 'Error while Creating Order' });
-}

@@ -12,8 +12,8 @@ export const getAllProducts = async (req: Request, res: Response) => {
 }
 
 export const getProductById = async (req: Request, res: Response) => {
-  const productId = req.body.id;
-  const product = await Product.find(productId);
+  const productId = req.params.id;
+  const product = await Product.findById(productId);
 
   if (product !== null) {
     return res.json(product)
@@ -21,6 +21,7 @@ export const getProductById = async (req: Request, res: Response) => {
     return res.json({ message: 'Prato não encontrado' })
   }
 }
+
 export const createProduct = async (req: Request, res: Response) => {
   const { name, price } = req.body;
 
