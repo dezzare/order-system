@@ -6,9 +6,9 @@ export interface OrderDoc extends Document {
   items: [any];
   totalAmount: number;
   orderDate: Date;
-  orderStatus: string;
   customerId: string;
-  customerTable: number;
+  // orderStatus: string;
+  // customerTable: number;
 }
 
 const OrderSchema = new Schema({

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { Customer, Food, Order } from '../models';}
+import { Customer, Product, Order, OrderDoc } from '../models';
 
 
 export const GetCustomerProfile = async (req: Request, res: Response) => {
-  const customer = req.params;
+  const customer = req.body;
 
   if (customer) {
     const profile = await Customer.findById(customer._id);
@@ -15,34 +15,34 @@ export const GetCustomerProfile = async (req: Request, res: Response) => {
 }
 
 export const AddToCart = async (req: Request, res: Response) => {
-  const customer = req.params;
+  const customer = req.body;
 
   if (customer) {
     const profile = await Customer.findById(customer._id);
     let cartItems = Array();
 
     const { _id, unit } = req.body;
-    const food = await Food.findById(_id);
+    const product = await Product.findById(_id);
 
-    if (food) {
+    if (product) {
       if (profile != null) {
         cartItems = profile.cart;
         if (cartItems.length > 0) {
-          let existFoodItems = cartItems.filter((item) => item.food._id.toString() === _id);
-          if (existFoodItems.length > 0) {
-            const index = cartItems.indexOf(existFoodItems[0]);
+          let existProductItems = cartItems.filter((item) => item.product._id.toString() === _id);
+          if (existProductItems.length > 0) {
+            const index = cartItems.indexOf(existProductItems[0]);
             if (unit > 0) {
-              cartItems[index] = { food, unit };
+              cartItems[index] = { product, unit };
             } else {
               cartItems.splice(index, 1);
             }
 
           } else {
-            cartItems.push({ food, unit })
+            cartItems.push({ product, unit })
           }
 
         } else {
-          cartItems.push({ food, unit });
+          cartItems.push({ product, unit });
         }
 
         if (cartItems) {
@@ -59,7 +59,7 @@ export const AddToCart = async (req: Request, res: Response) => {
 }
 
 export const GetCart = async (req: Request, res: Response) => {
-  const customer = req.params;
+  const customer = req.body;
 
   if (customer) {
     const profile = await Customer.findById(customer._id);
@@ -71,10 +71,10 @@ export const GetCart = async (req: Request, res: Response) => {
 }
 
 export const DeleteCart = async (req: Request, res: Response) => {
-  const customer = req.params;
+  const customer = req.body;
 
   if (customer) {
-    const profile = await Customer.findById(customer._id).populate('cart.food').exec();
+    const profile = await Customer.findById(customer._id).populate('cart.product').exec();
     if (profile != null) {
       profile.cart = [] as any;
       const cartResult = await profile.save();
@@ -86,22 +86,21 @@ export const DeleteCart = async (req: Request, res: Response) => {
 
 
 export const AddCartToOrders = async (req: Request, res: Response) => {
-  const customer = req.params;
-  const { amount, items } = req.body;
+  const customer = req.body;
 
   if (customer) {
     const profile = await Customer.findById(customer._id);
     const orderId = `${Math.floor(Math.random() * 89999) + 1000}`;
-    const cart = req.body;
+    const cart = req.body.cart;
     let cartItems = Array();
     let netAmount = 0.0;
-    const foods = await Food.find().where('_id').in(cart.map(item => item._id)).exec();
+    const products = await Product.find().where('_id').in(cart.map(item => item._id)).exec();
 
-    foods.map(food => {
+    products.map(product => {
       cart.map(({ _id, unit }) => {
-        if (food._id == _id) {
-          netAmount += (food.price * unit);
-          cartItems.push({ food, unit })
+        if (product._id == _id) {
+          netAmount += (product.price * unit);
+          cartItems.push({ product, unit })
         }
       })
     })
@@ -111,18 +110,18 @@ export const AddCartToOrders = async (req: Request, res: Response) => {
         orderId: orderId,
         items: cartItems,
         totalAmount: netAmount,
-        paidAmount: amount,
         orderDate: new Date(),
-        orderStatus: 'Esperando Confirmação',
-        remarks: '',
+        customerId: profile
       })
 
-      profile.cart = [] as any;
-      profile.orders.push(currentOrder);
-      currentOrder.orderId = orderId;
-      currentOrder.status = 'Confirmado'
+      if (profile === null) {
+        return res.status(400).json({ message: 'Carrinho está vazio' })
+      }
 
-      await currentTransaction.save();
+      profile.cart = [] as any;
+      profile.orders.push(currentOrder as OrderDoc);
+
+      await currentOrder.save();
 
       const profileResponse = await profile.save();
 

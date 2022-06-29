@@ -8,7 +8,7 @@ interface CustomerDoc extends Document {
 }
 
 const CustomerSchema = new Schema({
-  id: { type: String, required: true }
+  id: { type: String, required: true },
   cart: [{
     food: { type: Schema.Types.ObjectId, ref: 'food' },
     unit: { type: Number }
@@ -22,14 +22,6 @@ const CustomerSchema = new Schema({
 }, { timestamps: true });
 
 const Customer = mongoose.model<CustomerDoc>('customer', CustomerSchema);
-
-new Customer({
-  table: 4,
-  cart: [],
-  orders: [],
-  pinCode: 9898
-})
-
 
 export { Customer }
 

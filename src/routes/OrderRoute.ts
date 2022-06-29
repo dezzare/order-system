@@ -1,13 +1,10 @@
-import express, { Request, Response } from 'express';
-import { OrderController } from '../controllers'
+import express from 'express';
+import { getOrders, getOrderById } from '../controllers'
 
 const router = express.Router();
 
-router.get('/foods', GetAllFoods);
-router.get('/food/:id', GetFoodById);
-
-router.get('/orders', GetOrders);
-router.get('/order/:id', GetOrderById);
+router.get('/orders', getOrders);
+router.get('/order/:id', getOrderById);
 
 // TODO
 // router.put('/status/update', UpdateOrderStatus);

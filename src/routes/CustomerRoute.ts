@@ -1,15 +1,15 @@
 import express from 'express';
-import { GetCart, AddToCart, DeleteCart, CreateOrder } from '../controllers';
+import { getCart, addToCart, deleteCart, createOrder } from '../controllers';
 
 
 const router = express.Router();
 
 
-router.get('/cart', GetCart);
-router.post('/cart', AddToCart);
-router.delete('/cart', DeleteCart);
+router.get('/cart', getCart);
+router.post('/cart', addToCart);
+router.delete('/cart', deleteCart);
 
-router.post('/order', CreateOrder);
+router.post('/order', createOrder);
 
 export { router as CustomerRoute }
 

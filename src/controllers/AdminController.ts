@@ -1,22 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import { Customer, Food, Order } from '../models';
+import { Customer, Product, Order } from '../models';
 
 
-export const CreateFood = async (req: Request, res: Response, next: NextFunction) => {
-  const { id, name, description, category, price, images } = req.body;
 
-  const createdFood = await Food.create({
-    id: id,
-    name: name,
-    description: description,
-    category: category,
-    price: price,
-    images: [images]
-  })
-  console.log('Passou por aqui');
-
-  return res.json(createdFood);
-}
 
 // export const GetFoodById = async (req: Request, res: Response, next: NextFunction) => {
 //   const foodId = req.params.name;
