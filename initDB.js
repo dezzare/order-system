@@ -5,14 +5,14 @@ db.createUser(
     roles: [
       {
         role: "readWrite",
-        db: "admin"
+        db: "orders"
       }
     ]
   }
 );
 
 
-testsDB = db.getSiblingDB('my_db');
+testsDB = db.getSiblingDB('orders');
 
 testsDB.createUser(
   {
@@ -21,7 +21,7 @@ testsDB.createUser(
     roles: [
       {
         role: "readWrite",
-        db: "my_db"
+        db: "orders"
       }
     ]
   }

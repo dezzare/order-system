@@ -10,6 +10,9 @@ Project to improve some skills:
   - Express
   - mongoose
 
+![](demo.gif)
+
+
 ________________________________
 ## How to Setup
   - install NodeJS
